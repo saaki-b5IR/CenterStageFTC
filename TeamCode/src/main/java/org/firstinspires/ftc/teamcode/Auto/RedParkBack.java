@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import  com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -13,35 +14,43 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Autonomous (name="RedParkBack")
 public class RedParkBack extends LinearOpMode {
 
-    private DistanceSensor distanceSensor;
+    private DcMotor BLeft;
+    private DcMotor BRight;
     private DcMotor FLeft;
     private DcMotor FRight;
-    private DcMotor BRight;
-    private DcMotor BLeft;
     private DcMotor Arm;
     private DcMotor Linear;
-    private Servo Claw;
+    private CRServo Claw;
+    private CRServo Climber;
+    private DcMotor Spool;
+    private Servo shoot;
 
     @Override
     public void runOpMode () {
-        BLeft = hardwareMap.get(DcMotor.class, "BLeft");
-        BRight = hardwareMap.get(DcMotor.class, "BRight");
-        FLeft = hardwareMap.get(DcMotor.class, "FLeft");
-        FRight = hardwareMap.get(DcMotor.class, "FRight");
+        BLeft = hardwareMap.dcMotor.get("BLeft");
+        BRight = hardwareMap.dcMotor.get("BRight");
+        FLeft  = hardwareMap.dcMotor.get("FLeft");
+        FRight = hardwareMap.dcMotor.get("FRight");
         Arm = hardwareMap.dcMotor.get("Arm");
         Linear = hardwareMap.dcMotor.get("Linear");
-        Claw = hardwareMap.servo.get("Claw");
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
+        Claw = hardwareMap.crservo.get("Claw");
+        Climber = hardwareMap.crservo.get("Climber");
+        Spool = hardwareMap.dcMotor.get("Spool");
+        shoot = hardwareMap.servo.get("shoot");
 
-        BRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        FLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        FRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        BLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        Linear.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
         while (opModeIsActive()) {
 
             strafeMotorsLeft(0.25, 1300);
+
             brakeMotors();
 
             telemetry.update();

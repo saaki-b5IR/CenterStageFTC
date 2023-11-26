@@ -37,8 +37,6 @@
             BLeft.setDirection(DcMotorSimple.Direction.REVERSE);
             Linear.setDirection(DcMotorSimple.Direction.REVERSE);
 
-            Arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            Arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             waitForStart();
             if (opModeIsActive()) {
                 // Put run blocks here.
@@ -48,35 +46,8 @@
                     servoMethod();
                     climbermethod();
                     shootermethod();
-                    if (gamepad2.a) {
-                        Arm.setTargetPosition(5000);
-                        Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        ((DcMotorEx) Arm).setVelocity(1000);
-                        while (opModeIsActive() && Arm.isBusy()) {
-                            telemetry.addData("Arm Encoder Position", Arm.getCurrentPosition());
-                            telemetry.update();
-                            drive();
-                            armMethod();
-                            servoMethod();
-                            climbermethod();
-                            shootermethod();
-                        }
-                        ((DcMotorEx) Arm).setVelocity(0);
-                    } else if (gamepad2.b) {
-                        Arm.setTargetPosition(0);
-                        Arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        ((DcMotorEx) Arm).setVelocity(-1000);
-                        while (opModeIsActive() && Arm.isBusy()) {
-                            telemetry.addData("Arm Encoder Position", Arm.getCurrentPosition());
-                            telemetry.update();
-                            drive();
-                            armMethod();
-                            servoMethod();
-                            climbermethod();
-                            shootermethod();
-                        }
-                        ((DcMotorEx) Arm).setVelocity(0);
-                    }
+
+
                 }
             }
         }
@@ -98,9 +69,9 @@
         }
 
         public void shootermethod(){
-            if (gamepad2.x) {
+            if (gamepad1.x) {
                 shoot.setPosition(1);
-            } else if (gamepad2.y) {
+            } else if (gamepad1.y) {
                 shoot.setPosition(0);
             }
         }
@@ -122,10 +93,10 @@
 
         public void armMethod(){
             if (gamepad2.right_stick_y != 0.0) {
-                Linear.setPower(0.5 * gamepad2.right_stick_y);
+                Linear.setPower(gamepad2.right_stick_y);
 
             }else if(gamepad2.left_stick_y != 0.0){
-                Arm.setPower(0.5 * gamepad2.left_stick_y);
+                Arm.setPower(gamepad2.left_stick_y);
             }else {
                 Arm.setPower(0);
                 Linear.setPower(0);
